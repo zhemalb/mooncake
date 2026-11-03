@@ -1,0 +1,44 @@
+{
+  "checked_requests": 200,
+  "requests_with_reusable_prefix": 199,
+  "requests_with_prefix_ge_2": 7,
+  "reusable_prefix_blocks": 322,
+  "max_reusable_prefix_blocks": 38,
+  "hit_length_histogram": {
+    "1": 192,
+    "2": 1,
+    "5": 1,
+    "14": 1,
+    "18": 1,
+    "26": 1,
+    "27": 1,
+    "38": 1
+  },
+  "sample_hits": [
+    {
+      "request": 134,
+      "reusable_prefix_blocks": 5,
+      "input_tokens": 3024
+    },
+    {
+      "request": 135,
+      "reusable_prefix_blocks": 26,
+      "input_tokens": 49948
+    },
+    {
+      "request": 138,
+      "reusable_prefix_blocks": 14,
+      "input_tokens": 7833
+    },
+    {
+      "request": 167,
+      "reusable_prefix_blocks": 38,
+      "input_tokens": 19878
+    },
+    {
+      "request": 178,
+      "reusable_prefix_blocks": 18,
+      "input_tokens": 14315
+    }
+  ]
+}

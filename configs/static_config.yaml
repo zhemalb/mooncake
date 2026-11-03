@@ -1,0 +1,48 @@
+components_manager:
+    task_processors:
+        main-task-processor:
+            worker_threads: $worker-threads
+        fs-task-processor:
+            worker_threads: $worker-fs-threads
+    default_task_processor: main-task-processor
+
+    components:
+        server:
+            listener:
+                port: $server-port
+                task_processor: main-task-processor
+        logging:
+            fs-task-processor: fs-task-processor
+            loggers:
+                default:
+                    file_path: '@stderr'
+                    level: $logger-level
+                    overflow_behavior: discard
+
+        dynamic-config:
+            defaults: {}
+
+        handler-ping:
+            path: /ping
+            method: GET
+            task_processor: main-task-processor
+            throttling_enabled: false
+            url_trailing_slash: strict-match
+
+        block-store:
+            data-dir: $data-dir
+            fs-task-processor: fs-task-processor
+
+        http-client-core:
+            fs-task-processor: fs-task-processor
+            dns_resolver: getaddrinfo
+
+        http-client-middleware-pipeline: {}
+
+        http-client: {}
+
+        handler-block:
+            path: /blocks/{key}
+            method: GET,PUT,DELETE
+            task_processor: main-task-processor
+            peers: $peers
