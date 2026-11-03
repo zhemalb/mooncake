@@ -1,0 +1,6 @@
+/tmp/
+/data/traces/*.jsonl
+*.log
+.DS_Store
+/build/
+/.cache/
