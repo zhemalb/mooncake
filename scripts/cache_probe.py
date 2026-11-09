@@ -24,11 +24,11 @@ def since_us(start_ns: int) -> int:
     return (time.perf_counter_ns() - start_ns) // 1000
 
 
-def emit(operation: str, source: str | None, size: int, latency_us: int, checksum_ok: bool) -> None:
+def emit(operation: str, source: str | None, size: int, peer_bytes: int, latency_us: int, checksum_ok: bool) -> None:
     line = {"operation": operation}
     if source:
         line["source"] = source
-    line.update(payload_bytes=size, network_bytes=size, latency_us=latency_us, checksum_ok=checksum_ok)
+    line.update(payload_bytes=size, peer_bytes=peer_bytes, latency_us=latency_us, checksum_ok=checksum_ok)
     print(json.dumps(line, separators=(",", ":")))
 
 
@@ -36,7 +36,7 @@ def put(base_url: str, checksum: str) -> None:
     start = time.perf_counter_ns()
     headers = {"X-Checksum-SHA256": checksum, "Content-Type": "application/octet-stream"}
     call(base_url, "PUT", 201, PAYLOAD, headers)
-    emit("put", None, len(PAYLOAD), since_us(start), True)
+    emit("put", None, len(PAYLOAD), 0, since_us(start), True)
 
 
 def get(base_url: str, checksum: str, expected_source: str) -> None:
@@ -45,16 +45,20 @@ def get(base_url: str, checksum: str, expected_source: str) -> None:
     latency = since_us(start)
 
     source = headers["X-Block-Source"]
+    peer_bytes = int(headers["X-Peer-Bytes"])
     ok = (
         data == PAYLOAD
         and hashlib.sha256(data).hexdigest() == checksum
         and headers["X-Checksum-SHA256"] == checksum
     )
-    emit("get", source, len(data), latency, ok)
+    emit("get", source, len(data), peer_bytes, latency, ok)
     if not ok:
         raise RuntimeError("блок вернулся испорченным")
     if source != expected_source:
         raise RuntimeError(f"блок пришел из {source}, а ждали {expected_source}")
+    expected_peer_bytes = len(data) if source == "remote" else 0
+    if peer_bytes != expected_peer_bytes:
+        raise RuntimeError(f"узел забрал у соседа {peer_bytes} байт, а ждали {expected_peer_bytes}")
 
 
 def main() -> None:

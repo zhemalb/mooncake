@@ -21,6 +21,8 @@ using userver::server::http::HttpStatus;
 
 constexpr PredefinedHeader kChecksumHeader{"X-Checksum-SHA256"};
 constexpr PredefinedHeader kSourceHeader{"X-Block-Source"};
+// Сколько байт узел забрал у соседей ради этого запроса.
+constexpr PredefinedHeader kPeerBytesHeader{"X-Peer-Bytes"};
 // Запрос от соседа, такой узел к своим соседям уже не ходит.
 constexpr PredefinedHeader kFromPeerHeader{"X-From-Peer"};
 
@@ -60,6 +62,8 @@ std::string BlockHandler::HandleRequestThrow(
                     throw handlers::ResourceNotFound();
                 }
                 response.SetHeader(kSourceHeader, std::string(ToString(block->tier)));
+                response
+                    .SetHeader(kPeerBytesHeader, std::to_string(block->tier == Tier::kRemote ? block->data.size() : 0));
                 response.SetHeader(kChecksumHeader, Checksum(block->data));
                 response.SetContentType("application/octet-stream");
                 return std::move(block->data);
