@@ -1,0 +1,6 @@
+worker-threads: 4
+worker-fs-threads: 2
+server-port: 18080
+logger-level: warning
+data-dir: tmp/cache_node
+peers: []

@@ -1,0 +1,5 @@
+{"operation":"put","payload_bytes":360448,"network_bytes":360448,"latency_us":12660,"checksum_ok":true}
+{"operation":"get","source":"ram","payload_bytes":360448,"network_bytes":360448,"latency_us":1584,"checksum_ok":true}
+{"operation":"get","source":"ssd","payload_bytes":360448,"network_bytes":360448,"latency_us":3800,"checksum_ok":true}
+{"operation":"get","source":"remote","payload_bytes":360448,"network_bytes":360448,"latency_us":7150,"checksum_ok":true}
+{"operation":"get","source":"ram","payload_bytes":360448,"network_bytes":360448,"latency_us":1578,"checksum_ok":true}
